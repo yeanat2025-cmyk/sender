@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Start Screen Share</title>
+</head>
+
+<body style="background:black;color:white;text-align:center">
+
+<h2>📱 Start Screen Share</h2>
+
+<button onclick="startShare()">Start Share</button>
+
+<br><br>
+
+<video id="video" autoplay playsinline style="width:90%"></video>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAavkx6aU0hiAzdcP70wjdG-YEXYmm1mdc",
+  authDomain: "game24-app.firebaseapp.com",
+  databaseURL: "https://game24-app-default-rtdb.firebaseio.com",
+  projectId: "game24-app",
+  storageBucket: "game24-app.firebasestorage.app",
+  messagingSenderId: "551706234613",
+  appId: "1:551706234613:web:4fd71e34e07b8b7a4dbfbc"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+async function startShare(){
+
+const stream = await navigator.mediaDevices.getDisplayMedia({
+video:true
+});
+
+const video = document.getElementById("video");
+video.srcObject = stream;
+
+setInterval(()=>{
+
+const canvas = document.createElement("canvas");
+
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+
+const ctx = canvas.getContext("2d");
+ctx.drawImage(video,0,0);
+
+const img = canvas.toDataURL("image/jpeg");
+
+firebase.database().ref("Screen/user1").update({
+frame:img,
+status:"online"
+});
+
+},1000);
+
+}
+
+</script>
+
+</body>
+</html>
